@@ -1,0 +1,84 @@
+.createMovie {
+    .createForm {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        &_left{
+            width: 473px;
+            height: 504px;
+            flex-shrink: 0;
+            margin-right: 127px;
+            .dropzone {
+                justify-content: center;
+                align-items: center;
+                display: flex;
+                flex-direction: column;
+                border: 2px dashed #ffffff;
+                height: 100%;
+                width: 100%;
+                border-radius: 10px;
+                cursor: pointer;
+                background-color: color(550);
+                overflow: hidden;
+                em {
+                  margin-bottom: 12px;
+                }
+                P {
+                  font-size: 14px;
+                  margin-bottom: 0;
+                  line-height: 24px;
+                }
+                &_uploaded {
+                  width: 100%;
+                  height: 100%;
+                  position: relative;
+                  img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                  }
+                  span {
+                    position: absolute;
+                    right: 5px;
+                    top: 5px;
+                    background: #2bd17e;
+                    z-index: 999;
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-weight: 600;
+                    cursor: pointer;
+                  }
+                }
+              }
+        }
+        &_right {
+            width: 362px;
+        }
+    }
+    @include media-breakpoint-down(xl) {
+        .createForm {
+            &_left {
+                margin-right: 60px;
+            }
+        }
+    }
+    @include media-breakpoint-down(lg) {
+        .createForm {
+            &_left {
+                margin-right: 20px;
+                width: calc(50% - 30px);
+                height: 372px;
+            }
+        }
+    }
+    @include media-breakpoint-down(md) {
+        .createForm {
+            &_left {width: 100%; margin-right: 0;}
+            &_right {width: 100%; order: -1;}
+        }
+    }
+}

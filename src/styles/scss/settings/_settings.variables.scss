@@ -1,0 +1,35 @@
+// color variables
+$colors: (
+  50:  #ffffff,
+  100: #F2F2F2,
+  500: #2BD17E,
+  550: #224957,
+  600: #093545,
+  900: #000000,
+);
+
+
+@function color($color) {
+
+  // checking to see if our $theme-colors map has that $color key
+  @if map-has-key($colors, $color) {
+    // and if so, it will get that color for us in the map-get syntax
+    @return map-get($colors, $color);
+  }
+
+  // if not, it will give us a helpful error when we compile
+  @error "Unknown `#{$color}` in $colors.";
+  @return null;
+}
+
+$success:#00b69b;
+$danger :#dc4c64;
+$warning:#ffc107;
+$info   : #0dcaf0;
+$light  : #f8f9fa;
+
+
+$imageurl: "../../images";
+$fonturl : "../../fonts";
+
+// fields height variable

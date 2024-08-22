@@ -1,0 +1,22 @@
+.authMain {
+    width: 100%; height: 100vh;
+    display: flex; justify-content: center;
+    align-items: center;
+    &_innerbox {
+        max-width: 300px;
+        width: 100%;
+        margin: 0 auto;
+        h1 {
+            font-size: 64px; line-height: 1.25;
+            margin-bottom: 40px; text-align: center;
+        }
+    }
+    @include media-breakpoint-down(md) {
+        &_innerbox {
+            max-width: 100%;
+            h1 {
+                font-size: 48px; line-height: 1.16;
+            }
+        }  
+    }
+}

@@ -1,0 +1,250 @@
+
+
+@mixin box-shadow($top, $left, $blur, $color, $inset:"") {
+    -o-box-shadow:$top $left $blur $color #{$inset};
+    -ms-box-shadow:$top $left $blur $color #{$inset};
+    -webkit-box-shadow:$top $left $blur $color #{$inset};
+    -moz-box-shadow:$top $left $blur $color #{$inset};
+    box-shadow:$top $left $blur $color #{$inset};
+}
+
+
+
+@mixin transform($value) {
+  -webkit-transform: $value;
+  -ms-transform: $value; // IE9 only
+  -o-transform: $value;
+  transform: $value;
+}
+
+@mixin scale($ratio...) {
+  -webkit-transform: scale($ratio);
+      -ms-transform: scale($ratio); // IE9 only
+       -o-transform: scale($ratio);
+          transform: scale($ratio);
+}
+
+
+
+@mixin transition($transition...) {
+  -webkit-transition: $transition;
+       -o-transition: $transition;
+       -moz-transition: $transition;
+          transition: $transition;
+}
+
+
+
+@mixin button-variant($color, $background, $border) {
+  color: $color;
+  background-color: $background;
+  border-color: $border;
+
+  &:hover, &:active, &.focus &.active,&.show,&-check:checked + &,
+  &:focus-visible, &:not(.btn-check) + &:hover,
+  &:first-child:hover, &-check:focus-visible + &, &:first-child:active, &:not(.btn-check)+ &:active
+  {
+    color: $color !important; background-color: lighten($background, 15%) !important;  border-color: lighten($border, 15%) !important; box-shadow: none !important;
+  }
+  &.disabled,  &[disabled],  fieldset[disabled] & {
+    background-color: $background; border-color: $border; box-shadow: none; color: $color !important;
+    cursor: not-allowed;
+    &:hover, &:focus, &.focus {
+      background-color: $background; border-color: $border; box-shadow: none;
+    }
+  }
+}
+
+@mixin button-outline-variant($color, $background, $border) {
+  color: $color;
+  // background-color: $background;
+  border-color: $border;
+
+  &:hover, &:active, &.active,
+  &:focus-visible, &:not(.btn-check) + &:hover,
+  &:first-child:hover, &-check:focus-visible + & {
+    color: $background !important; background-color: $color !important;  border-color: $color !important; box-shadow: none !important;
+  }
+  &.disabled,  &[disabled],  fieldset[disabled] & {
+    background-color: $color; border-color: $color; box-shadow: none; color: $background !important;
+    cursor: not-allowed;
+    &:hover, &:focus, &.focus {
+      background-color: $color; border-color: $color; box-shadow: none;
+    }
+  }
+}
+@mixin text-overflow() {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+@mixin font-face($font-family, $file-path, $weight: normal, $style: normal, $asset-pipeline: false ) {
+  @font-face {
+    font-family: $font-family;
+    font-weight: $weight;
+    font-style: $style;
+    font-display:swap;
+    @if $asset-pipeline == true {
+      src: font-url('#{$file-path}.eot'); 
+      src: font-url('#{$file-path}.eot?#iefix')          format('embedded-opentype'),
+           font-url('#{$file-path}.woff')                format('woff'),
+           font-url('#{$file-path}.ttf')                 format('truetype'),
+           font-url('#{$file-path}.svg##{$font-family}') format('svg');
+    } @else {
+      src: url('#{$file-path}.eot');
+      src: url('#{$file-path}.eot?#iefix')               format('embedded-opentype'),
+           url('#{$file-path}.woff')                     format('woff'),
+           url('#{$file-path}.ttf')                      format('truetype'),
+           url('#{$file-path}.svg##{$font-family}')      format('svg');
+    }
+  }
+}
+
+
+@mixin absolutecenter($axis: "both"){
+  position:absolute;
+  @if $axis == "y"{
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  @if $axis == "x"{
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  @if $axis == "both"{
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+  }
+}
+
+
+
+
+// flex center
+@mixin flexcenter($axis: "both"){
+  display: flex;
+  @if $axis == "y"{
+    align-items: center;
+  }
+  @if $axis == "x"{
+    justify-content: center;
+  }
+  @if $axis == "both"{
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+// placeholder
+@mixin placeholder {
+  &::-webkit-input-placeholder {@content;}
+  &:-moz-placeholder           {@content;}
+  &::-moz-placeholder          {@content;}
+  &:-ms-input-placeholder      {@content;}  
+}
+
+@mixin text-clamp($lines: 2, $line-height: false) {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+  -moz-line-clamp:$lines;
+  -ms-line-clamp:$lines;
+  -o-line-clamp:$lines;
+  text-overflow: ellipsis;  
+  @if $line-height {
+      max-height: $line-height * $lines * 1px;
+  }
+}
+
+@mixin icomonbefore{
+  font-family: "icomoon";
+  width: 35px;
+  height: 35px;
+  font-size: 14px;
+  @include absolutecenter(y);
+  @include flexcenter;
+  border-radius: 50%;
+  color: color(50);
+}
+
+// h tags font size 
+@mixin font-size($fs-map) {
+  @each $fs-breakpoint, $fs-font-size in $fs-map {
+    @if $fs-breakpoint == null {
+      font-size: $fs-font-size;
+    }
+    @else {
+      @media screen and (min-width: $fs-breakpoint) {
+        font-size: $fs-font-size;
+      }
+    }
+  }
+}
+
+// padding mixin
+@mixin padding($p-xxl, $p-xl,  $p-lg, $p-md, $p-null ){
+  padding:$p-null; 
+  @include media-breakpoint-up(md) { padding:$p-md; }
+  @include media-breakpoint-up(lg) { padding:$p-lg; }
+  @include media-breakpoint-up(xl) { padding:$p-xl; }  
+  @include media-breakpoint-up(xxl) { padding:$p-xxl; }
+}
+
+// margin mixin
+@mixin margin($m-xxl, $m-xl,  $m-lg, $m-md, $m-null ){
+  margin:$m-null; 
+  @include media-breakpoint-up(md) { margin:$m-md; }
+  @include media-breakpoint-up(lg) { margin:$m-lg; }
+  @include media-breakpoint-up(xl) { margin:$m-xl; }  
+  @include media-breakpoint-up(xxl) { margin:$m-xxl; }
+}
+
+
+@mixin autofill{
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active{
+    @content;     
+  }
+}
+
+
+$spacer: 0.25rem;
+$sizes: (0, 1, 2, 3, 4, 5, auto);
+$directions: (t, b, s, e, x, y);
+
+@mixin generate-margin-padding-classes($property, $ptype) {
+  @each $size in $sizes {
+    .#{$property}-#{$size} {
+      #{$ptype}: if($size == auto, auto, $size * $spacer) !important;
+    }
+  }
+  @each $dir in $directions {
+    @each $size in $sizes {
+      $css-property: if($dir == t, 'top', 
+                    if($dir == b, 'bottom', 
+                    if($dir == s, 'left', 
+                    if($dir == e, 'right', 
+                    if($dir == x, ('left', 'right'), 
+                    if($dir == y, ('top', 'bottom'), null))))));
+      @if type-of($css-property) == list {
+        .#{$property}#{$dir}-#{$size} {
+          #{$ptype}-#{nth($css-property, 1)}: if($size == auto, auto, $size * $spacer) !important;
+          #{$ptype}-#{nth($css-property, 2)}: if($size == auto, auto, $size * $spacer) !important;
+        }
+      } @else {
+        .#{$property}#{$dir}-#{$size} {
+          #{$ptype}-#{$css-property}: if($size == auto, auto, $size * $spacer) !important;
+        }
+      }
+    }
+  }
+}
+
+
+

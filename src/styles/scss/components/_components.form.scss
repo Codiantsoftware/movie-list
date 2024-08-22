@@ -1,0 +1,60 @@
+.form-group {
+  margin-bottom: 24px;
+  &-small {
+    width: 216px;
+  }
+  .form-control {
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 14px;
+    height: 45px;
+    line-height: 24px;
+    background-color: color(550);
+    border: none;
+    color: color(50);
+    &[type="number"]::-webkit-inner-spin-button,
+    [type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      margin: 0;
+    }
+    &::placeholder {
+      color: color(50);
+    }
+    &:focus {
+      box-shadow: none;
+    }
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 150px color(550) inset !important;
+      -webkit-text-fill-color: color(50) !important;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+  }
+  .form-check-input {
+    margin: 0;
+    width: 18px;
+    height: 18px;
+    border: none;
+    background-color: color(550);
+    margin-right: 8px;
+    cursor: pointer;
+    &:focus {
+      box-shadow: none;
+    }
+  }
+  @include media-breakpoint-down(md) {
+    &-small {
+      width: 100%;
+    }
+  }
+}
+.error {
+  font-size: 12px;
+  margin-top: 8px;
+  display: block;
+  color: #eb5757;
+}
