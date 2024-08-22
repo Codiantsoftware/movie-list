@@ -38,6 +38,7 @@ This project is a web application built using Next.js, and MySQL. The applicatio
 
 3. Create a .env file in the root of the project and configure the following environment variables:
 
+   ```bash
    MYSQL_HOST=localhost
    MYSQL_USER=root
    MYSQL_PASSWORD=
@@ -48,9 +49,14 @@ This project is a web application built using Next.js, and MySQL. The applicatio
    JWT_SECRET=your-jwt-secret
    NEXT_PUBLIC_REMEMBER_SECRET="MoViEs_Secret"
 
+   ```
+
 4. Create the database using phpMyAdmin, update the connection details in .env, and seed the database with initial data:
 
+   ```bash
    npm run seed
+
+   ```
 
 5. Run the development server:
 
