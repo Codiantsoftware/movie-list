@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
+
 import { Spinner } from "react-bootstrap";
+
+import { setResetUserDetails } from "@/store/accountSlice";
 
 /**
  * AuthGuard component that protects routes based on authentication status.
@@ -12,31 +17,36 @@ import { Spinner } from "react-bootstrap";
  */
 const AuthGuard = ({ children }) => {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state?.account?.userDetails?.token);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
     if (token) {
-      // User is authenticated
-      if (router.pathname === "/auth/signin") {
-        router.push("/");
+      const decoded = jwtDecode(token);
+      const currentTime = Date.now() / 1000;
+      const isExpireToken = decoded.exp < currentTime;
+      if (isExpireToken) {
+        dispatch(setResetUserDetails());
+        router.push("/auth/signin");
       } else {
-        setIsLoading(false); // Authentication check complete
+        if (router.pathname === "/auth/signin") {
+          router.push("/");
+        } else {
+          setIsLoading(false);
+        }
       }
     } else {
-      // User is not authenticated
       if (
         router.pathname !== "/auth/signin" &&
         router.pathname !== "/api-doc"
       ) {
         router.push("/auth/signin");
       } else {
-        setIsLoading(false); // Already on sign-in page
+        setIsLoading(false);
       }
     }
-  }, [router]);
+  }, [router, token]);
 
   if (isLoading) {
     return (

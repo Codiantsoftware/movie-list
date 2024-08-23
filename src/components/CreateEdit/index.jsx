@@ -3,11 +3,12 @@ import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
-
-import { Card, Container, Form, Image, Spinner } from "react-bootstrap";
 import Dropzone from "react-dropzone";
+
+import { Container, Form, Image, Spinner } from "react-bootstrap";
 import Button from "../Button";
-// import Image from "next/image";
+
+import useRequest from "@/hooks/useRequest";
 
 const acceptFileExt = ["image/png", "image/jpg", "image/jpeg"];
 
@@ -19,8 +20,9 @@ const acceptFileExt = ["image/png", "image/jpg", "image/jpeg"];
  * @return {JSX.Element} The JSX element representing the component.
  */
 const CreateAndEdit = (props) => {
-  const router = useRouter();
   const { editDetails } = props;
+  const router = useRouter();
+  const { requestHandler } = useRequest();
 
   /**
    * Handles form submission by sending a request to the API to create or update a movie.
@@ -39,14 +41,20 @@ const CreateAndEdit = (props) => {
         ? `/api/movies/${router.query.id}`
         : "/api/movies";
 
-      const response = await fetch(apiUrl, {
+      const configData = {
+        url: apiUrl,
         method: editDetails ? "PUT" : "POST",
         body: formData,
+      };
+
+      await requestHandler(configData, (data) => {
+        if (data?.success) {
+          toast.success(`${editDetails ? "Updated" : "Created"} successfully`);
+          router.push("/");
+        } else {
+          throw new Error(data?.message);
+        }
       });
-      const data = await response.json();
-      if (!data?.success) throw new Error(data.message);
-      toast.success(`${editDetails ? "Updated" : "Created"} successfully`);
-      router.push("/");
     } catch (error) {
       toast.error(error.message ?? "Something went wrong");
     }

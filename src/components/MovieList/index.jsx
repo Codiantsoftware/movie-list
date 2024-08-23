@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 
 import {
   Button,
@@ -15,7 +16,8 @@ import {
   Spinner,
 } from "react-bootstrap";
 
-import withAuth from "../hoc/withAuth";
+import { setResetUserDetails } from "@/store/accountSlice";
+import useRequest from "@/hooks/useRequest";
 
 const PAGE_LIMIT = 8;
 
@@ -27,12 +29,14 @@ const PAGE_LIMIT = 8;
  */
 const MovieList = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [state, setState] = useState({
     isLoading: true,
     lists: [],
     currentPage: 1,
     pagination: {},
   });
+  const { requestHandler } = useRequest();
 
   /**
    * Retrieves a list of movies from the API, handling pagination and loading state.
@@ -49,20 +53,24 @@ const MovieList = () => {
       if (isPagination) {
         setState((prevState) => ({ ...prevState, isLoading: true }));
       }
-      const response = await fetch(
-        `/api/movies?page=${page}&limit=${PAGE_LIMIT}`,
-      );
-      const data = await response.json();
-      setState((prevState) => ({
-        ...prevState,
-        isLoading: false,
-        lists: data?.data ?? [],
-        currentPage: isPagination ? page : prevState.currentPage,
-        pagination: {
-          ...data?.pagination,
-          totalPages: Math.ceil(data?.pagination?.total / PAGE_LIMIT),
-        },
-      }));
+
+      const configData = {
+        url: `/api/movies?page=${page}&limit=${PAGE_LIMIT}`,
+        method: "GET",
+      };
+
+      await requestHandler(configData, (data) => {
+        setState((prevState) => ({
+          ...prevState,
+          isLoading: false,
+          lists: data?.data ?? [],
+          currentPage: isPagination ? page : prevState.currentPage,
+          pagination: {
+            ...data?.pagination,
+            totalPages: Math.ceil(data?.pagination?.total / PAGE_LIMIT),
+          },
+        }));
+      });
     } catch (error) {
       setState({ ...state, isLoading: false });
       toast.error(error?.messsage ?? "Something went wrong");
@@ -85,7 +93,7 @@ const MovieList = () => {
    * @return {void} No return value, redirects to signin page
    */
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    dispatch(setResetUserDetails());
     router.push("/auth/signin");
   };
 
@@ -199,4 +207,4 @@ const MovieList = () => {
   );
 };
 
-export default withAuth(MovieList);
+export default MovieList;

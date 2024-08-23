@@ -1,7 +1,7 @@
-import { DataTypes } from 'sequelize';
-import sequelize from '../lib/db';
+import { DataTypes } from "sequelize";
+import sequelize from "../lib/db";
 
-const User = sequelize.define('User', {
+const User = sequelize.define("User", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -18,6 +18,11 @@ const User = sequelize.define('User', {
   password: {
     type: DataTypes.STRING,
     allowNull: false,
+  },
+  token: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    default: null,
   },
   createdAt: {
     type: DataTypes.DATE,

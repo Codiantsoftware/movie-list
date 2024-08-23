@@ -4,6 +4,7 @@ import Movie from "../../../models/Movie";
 import sequelize from "../../../lib/db";
 import { movieSchema } from "../../../lib/validationSchemas";
 import upload from "../../../lib/upload";
+import { authMiddleware } from "../../../lib/authMiddleware";
 import logger from "@/utils/logger";
 
 export const config = {
@@ -21,7 +22,7 @@ const uploadMiddleware = upload.single("poster");
  * @param {import('next').NextApiRequest} req - The request object.
  * @param {import('next').NextApiResponse} res - The response object.
  */
-export default async function handler(req, res) {
+async function handleUploadMovie(req, res) {
   await sequelize.sync();
 
   const { method } = req;
@@ -93,4 +94,8 @@ export default async function handler(req, res) {
         .json({ success: false, message: `Method ${method} not allowed` });
       break;
   }
+}
+
+export default function handler(req, res) {
+  authMiddleware(req, res, () => handleUploadMovie(req, res));
 }

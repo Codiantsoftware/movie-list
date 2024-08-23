@@ -5,6 +5,7 @@ import upload from "../../../../lib/upload";
 import logger from "@/utils/logger";
 import { movieUpdateSchema } from "../../../../lib/validationSchemas";
 import { ValidationError } from "sequelize";
+import { authMiddleware } from "../../../../lib/authMiddleware";
 /**
  * API route handler for managing individual movies by ID.
  *
@@ -29,11 +30,15 @@ export default async function handler(req, res) {
 
   switch (method) {
     case "GET":
-      return handleGetMovieById(req, res, id);
+      return authMiddleware(req, res, () => handleGetMovieById(req, res, id));
     case "PUT":
-      return handleUpdateMovieById(req, res, id);
+      return authMiddleware(req, res, () =>
+        handleUpdateMovieById(req, res, id),
+      );
     case "DELETE":
-      return handleDeleteMovieById(req, res, id);
+      return authMiddleware(req, res, () =>
+        handleDeleteMovieById(req, res, id),
+      );
     default:
       return res.status(405).json({
         success: false,

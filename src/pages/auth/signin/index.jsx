@@ -10,6 +10,9 @@ import CryptoJS from "crypto-js";
 import { Container, Form, Spinner } from "react-bootstrap";
 import Button from "@/components/Button";
 
+import { setIsRememberMe, setUserDetails } from "@/store/accountSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 /**
  * Handles user sign-in functionality, including form validation,
  * API request to authenticate user, and storing user credentials
@@ -19,6 +22,11 @@ import Button from "@/components/Button";
  */
 const SignIn = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
+
+  const isRememberDetails = useSelector(
+    (state) => state?.account?.isRememberMe,
+  );
 
   // Secret key for encryption
   const secretKey = process.env.NEXT_PUBLIC_REMEMBER_SECRET;
@@ -47,19 +55,22 @@ const SignIn = () => {
       }
 
       toast.success("Sign in successfully");
+      dispatch(setUserDetails({ ...data?.user, token: data?.token }));
 
       // Store token based on remember me option
-      localStorage.setItem("token", data?.token);
       if (formValues.isRemember) {
-        localStorage.setItem("savedEmail", formValues.email);
         const encryptedPassword = CryptoJS.AES.encrypt(
           formValues.password,
           secretKey,
         ).toString();
-        localStorage.setItem("savedPassword", encryptedPassword);
+        dispatch(
+          setIsRememberMe({
+            email: formValues.email,
+            password: encryptedPassword,
+          }),
+        );
       } else {
-        localStorage.removeItem("savedEmail");
-        localStorage.removeItem("savedPassword");
+        dispatch(setIsRememberMe(null));
       }
 
       router.push("/");
@@ -88,16 +99,16 @@ const SignIn = () => {
 
   // Load saved credentials on component mount
   useEffect(() => {
-    const savedEmail = localStorage.getItem("savedEmail");
-    const encryptedPassword = localStorage.getItem("savedPassword");
-
-    if (savedEmail && encryptedPassword) {
+    if (isRememberDetails) {
       // Decrypt the password
-      const bytes = CryptoJS.AES.decrypt(encryptedPassword, secretKey);
+      const bytes = CryptoJS.AES.decrypt(
+        isRememberDetails?.password,
+        secretKey,
+      );
       const decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
 
       formik.setValues({
-        email: savedEmail,
+        email: isRememberDetails?.email,
         password: decryptedPassword,
         isRemember: true,
       });

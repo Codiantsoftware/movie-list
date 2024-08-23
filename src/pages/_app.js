@@ -6,15 +6,19 @@ import { Toaster } from "react-hot-toast";
 import NextNProgress from "nextjs-progressbar";
 
 import AuthGuard from "@/utils/AuthGuard";
+import ReduxProvider from "@/store/redux-provider";
+import { store } from "@/store";
 
 export default function App({ Component, pageProps }) {
   return (
     <>
-      <AuthGuard>
-        <NextNProgress color="#20c997" options={{ showSpinner: false }} />
-        <Component {...pageProps} />
-        <Toaster />
-      </AuthGuard>
+      <ReduxProvider store={store}>
+        <AuthGuard>
+          <NextNProgress color="#20c997" options={{ showSpinner: false }} />
+          <Component {...pageProps} />
+        </AuthGuard>
+      </ReduxProvider>
+      <Toaster />
     </>
   );
 }

@@ -1,7 +1,7 @@
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 import { createSwaggerSpec } from "next-swagger-doc";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
 import "swagger-ui-react/swagger-ui.css";
 
 const SwaggerUI = dynamic(() => import("swagger-ui-react"), { ssr: false });
@@ -34,6 +34,45 @@ export async function getStaticProps() {
           description: "Development server",
         },
       ],
+      components: {
+        schemas: {
+          Movie: {
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+                description: "The unique identifier for a movie",
+              },
+              title: {
+                type: "string",
+                description: "The title of the movie",
+              },
+              year: {
+                type: "integer",
+                description: "The release year of the movie",
+              },
+              poster: {
+                type: "string",
+                format: "binary",
+                description: "Poster image of the movie",
+              },
+            },
+            required: ["id", "title", "year"],
+          },
+        },
+        securitySchemes: {
+          bearerAuth: {
+            type: "http",
+            scheme: "bearer",
+            bearerFormat: "JWT",
+          },
+        },
+      },
+      // security: [
+      //   {
+      //     bearerAuth: [],
+      //   },
+      // ],
       paths: {
         "/movies": {
           get: {
@@ -86,6 +125,11 @@ export async function getStaticProps() {
                 },
               },
             },
+            security: [
+              {
+                bearerAuth: [],
+              },
+            ],
           },
           post: {
             summary: "Create a new movie with a poster",
@@ -112,7 +156,7 @@ export async function getStaticProps() {
                         description: "Poster image of the movie",
                       },
                     },
-                    required: ["title", "year"],
+                    required: ["title", "year", "poster"],
                   },
                 },
               },
@@ -128,6 +172,11 @@ export async function getStaticProps() {
                 description: "Server error",
               },
             },
+            security: [
+              {
+                bearerAuth: [],
+              },
+            ],
           },
         },
         "/movies/{id}": {
@@ -155,6 +204,11 @@ export async function getStaticProps() {
                 },
               },
             },
+            security: [
+              {
+                bearerAuth: [],
+              },
+            ],
           },
           put: {
             summary: "Update a specific movie with an optional poster file",
@@ -203,6 +257,11 @@ export async function getStaticProps() {
                 description: "Server error",
               },
             },
+            security: [
+              {
+                bearerAuth: [],
+              },
+            ],
           },
           delete: {
             summary: "Delete a specific movie",
@@ -227,6 +286,11 @@ export async function getStaticProps() {
                 description: "Server error",
               },
             },
+            security: [
+              {
+                bearerAuth: [],
+              },
+            ],
           },
         },
         "/auth/login": {
@@ -313,28 +377,6 @@ export async function getStaticProps() {
                 },
               },
             },
-          },
-        },
-      },
-      components: {
-        schemas: {
-          Movie: {
-            type: "object",
-            properties: {
-              id: { type: "integer" },
-              title: { type: "string" },
-              year: { type: "integer" },
-              poster: { type: "string", format: "uri" },
-            },
-          },
-          User: {
-            type: "object",
-            properties: {
-              id: { type: "integer" },
-              email: { type: "string", format: "email" },
-              password: { type: "string", format: "password" },
-            },
-            required: ["email", "password"],
           },
         },
       },

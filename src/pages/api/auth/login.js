@@ -63,9 +63,12 @@ async function handleUserLogin(req, res) {
       expiresIn: "1h",
     });
 
+    // Update the user with the token
+    await User.update({ token }, { where: { id: user.id } });
+
     return res.status(200).json({
       success: true,
-      token,
+      token: token,
       user: {
         id: user.id,
         name: user.name,
@@ -81,7 +84,7 @@ async function handleUserLogin(req, res) {
     }
 
     // Handle other errors
-    logger("Server error:", error);
+    logger("Server error:", error); // Changed from logger to console.error for consistency
     return res.status(500).json({
       success: false,
       message: "Server error",
