@@ -12,7 +12,7 @@ import { Spinner } from "react-bootstrap";
  */
 const AuthGuard = ({ children }) => {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true); // Use isLoading instead of isValid
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const token =
@@ -27,7 +27,10 @@ const AuthGuard = ({ children }) => {
       }
     } else {
       // User is not authenticated
-      if (router.pathname !== "/auth/signin") {
+      if (
+        router.pathname !== "/auth/signin" &&
+        router.pathname !== "/api-doc"
+      ) {
         router.push("/auth/signin");
       } else {
         setIsLoading(false); // Already on sign-in page

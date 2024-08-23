@@ -3,11 +3,6 @@ import toast from "react-hot-toast";
 
 import CreateAndEdit from "@/components/CreateEdit";
 
-/**
- * Fetches movie details from API and redirects to homepage if not found
- * @param {{query: {id: string}}} context
- * @returns {{props: {details: import("../../../models/Movie").MovieAttributes}} | {redirect: {destination: string, permanent: boolean}}}
- */
 export async function getServerSideProps(context) {
   try {
     const url = process.env.NEXTAUTH_URL;

@@ -1,14 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Button as BsButton } from 'react-bootstrap';
 
-/**
- * A custom button component that supports ripple effect.
- * 
- * @param {Object} props - The component props.
- * @param {ReactNode} props.children - The child elements of the button.
- * @param {string} [props.className=''] - The additional CSS class name for the button.
- * @returns {JSX.Element} The button component with ripple effect.
- */
 function Button({ children, className = '', ...rest }) {
   const buttonRef = useRef(null);
 
@@ -25,10 +17,6 @@ function Button({ children, className = '', ...rest }) {
     };
   }, []);
 
-  /**
-   * Creates a ripple effect when the button is clicked.
-   * @param {MouseEvent} e - The mouse event that triggered the ripple effect.
-   */
   const createRipple = (e) => {
     const button = e.currentTarget;
 

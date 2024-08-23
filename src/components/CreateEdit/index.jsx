@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { Card, Container, Form, Image, Spinner } from "react-bootstrap";
 import Dropzone from "react-dropzone";
 import Button from "../Button";
+// import Image from "next/image";
 
 const acceptFileExt = ["image/png", "image/jpg", "image/jpeg"];
 

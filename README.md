@@ -48,6 +48,7 @@ This project is a web application built using Next.js, and MySQL. The applicatio
    NEXTAUTH_SECRET=your-secret-key
    JWT_SECRET=your-jwt-secret
    NEXT_PUBLIC_REMEMBER_SECRET="MoViEs_Secret"
+   SWAGER_URL=http://localhost:3000
 
    ```
 

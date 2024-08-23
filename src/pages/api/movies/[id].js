@@ -133,18 +133,17 @@ async function handleUpdateMovieById(req, res, id) {
           data: movie,
         });
       } catch (error) {
-        if (error instanceof ValidationError) {
-          return res.status(422).json({
-            success: false,
-            message: error.message,
-          });
+        if (error.name === "ValidationError") {
+          return res
+            .status(400)
+            .json({ success: false, message: error.errors.join(", ") });
         } else {
           logger("Error updating movie:", error);
 
           return res.status(500).json({
             success: false,
             message: "An error occurred while updating the movie",
-            error: error.message || "Internal Server Error",
+            // error: error.message || "Internal Server Error",
           });
         }
       }
