@@ -1,10 +1,12 @@
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { i18n } from "next-i18next";
+
 import Movie from "../../../../models/Movie";
 import sequelize from "../../../../lib/db";
 import upload from "../../../../lib/upload";
 
 import logger from "@/utils/logger";
 import { movieUpdateSchema } from "../../../../lib/validationSchemas";
-import { ValidationError } from "sequelize";
 import { authMiddleware } from "../../../../lib/authMiddleware";
 /**
  * API route handler for managing individual movies by ID.
@@ -22,6 +24,10 @@ export const config = {
 const uploadMiddleware = upload.single("poster");
 export default async function handler(req, res) {
   await sequelize.sync();
+
+  const lang = req.headers["accept-language"];
+
+  await serverSideTranslations(lang || "en", ["common"]);
 
   const {
     query: { id },
@@ -42,7 +48,7 @@ export default async function handler(req, res) {
     default:
       return res.status(405).json({
         success: false,
-        message: `Method ${method} not allowed`,
+        message: `${method} ${i18n.t("backend.methodNotSupported")}`,
       });
   }
 }
@@ -58,7 +64,7 @@ async function handleGetMovieById(req, res, id) {
   try {
     if (!id || isNaN(id)) {
       return res.status(400).json({
-        message: "Invalid movie ID",
+        message: i18n.t("backend.invalidMovieId"),
         success: false,
         data: {},
       });
@@ -68,7 +74,7 @@ async function handleGetMovieById(req, res, id) {
 
     if (!movie) {
       return res.status(404).json({
-        message: "Movie not found",
+        message: i18n.t("backend.movieNotFound"),
         success: false,
         data: {},
       });
@@ -83,8 +89,8 @@ async function handleGetMovieById(req, res, id) {
 
     return res.status(500).json({
       success: false,
-      message: "An error occurred while fetching the movie",
-      error: error.message || "Internal Server Error",
+      message: i18n.t("backend.errorOccurred"),
+      error: error?.message ?? i18n.t("serverError"),
     });
   }
 }
@@ -100,7 +106,7 @@ async function handleUpdateMovieById(req, res, id) {
   try {
     if (!id || isNaN(id)) {
       return res.status(400).json({
-        message: "Invalid movie ID",
+        message: i18n.t("backend.invalidMovieId"),
         success: false,
       });
     }
@@ -110,14 +116,17 @@ async function handleUpdateMovieById(req, res, id) {
     if (!movie) {
       return res.status(404).json({
         success: false,
-        message: "Movie not found",
+        message: i18n.t("backend.movieNotFound"),
       });
     }
 
     // Only proceed with file upload if the movie exists
     uploadMiddleware(req, res, async (err) => {
       if (err) {
-        return res.status(400).json({ success: false, message: err.message });
+        return res.status(400).json({
+          success: false,
+          message: err.message ?? i18n.t("serverError"),
+        });
       }
 
       try {
@@ -135,6 +144,7 @@ async function handleUpdateMovieById(req, res, id) {
 
         return res.status(200).json({
           success: true,
+          message: i18n.t("backend.movieUpdate"),
           data: movie,
         });
       } catch (error) {
@@ -147,7 +157,7 @@ async function handleUpdateMovieById(req, res, id) {
 
           return res.status(500).json({
             success: false,
-            message: "An error occurred while updating the movie",
+            message: i18n.t("backend.errorOccurred"),
             // error: error.message || "Internal Server Error",
           });
         }
@@ -158,8 +168,8 @@ async function handleUpdateMovieById(req, res, id) {
 
     return res.status(500).json({
       success: false,
-      message: "An error occurred while updating the movie",
-      error: error.message || "Internal Server Error",
+      message: i18n.t("backend.errorOccurred"),
+      error: error?.message ?? i18n.t("serverError"),
     });
   }
 }
@@ -175,7 +185,7 @@ async function handleDeleteMovieById(req, res, id) {
   try {
     if (!id || isNaN(id)) {
       return res.status(400).json({
-        message: "Invalid movie ID",
+        message: i18n.t("backend.invalidMovieId"),
         success: false,
       });
     }
@@ -185,7 +195,7 @@ async function handleDeleteMovieById(req, res, id) {
     if (!movie) {
       return res.status(404).json({
         success: false,
-        message: "Movie not found",
+        message: i18n.t("backend.movieNotFound"),
       });
     }
 
@@ -193,6 +203,7 @@ async function handleDeleteMovieById(req, res, id) {
 
     return res.status(200).json({
       success: true,
+      message: i18n.t("backend.movieDelete"),
       data: {},
     });
   } catch (error) {
@@ -200,8 +211,8 @@ async function handleDeleteMovieById(req, res, id) {
 
     return res.status(500).json({
       success: false,
-      message: "An error occurred while deleting the movie",
-      error: error.message || "Internal Server Error",
+      message: i18n.t("backend.errorOccurred"),
+      error: error?.message ?? i18n.t("serverError"),
     });
   }
 }

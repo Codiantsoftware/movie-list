@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+import Head from "next/head";
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 
 import { Spinner } from "react-bootstrap";
@@ -7,8 +9,10 @@ import { Spinner } from "react-bootstrap";
 import useRequest from "@/hooks/useRequest";
 import CreateAndEdit from "@/components/CreateEdit";
 
+import { getStaticPropsWithTranslations } from "@/utils/i18n";
+
 export async function getServerSideProps(context) {
-  return { props: {} };
+  return getStaticPropsWithTranslations(context.locale);
 }
 
 /**
@@ -19,6 +23,8 @@ export async function getServerSideProps(context) {
  */
 const EditMovie = () => {
   const router = useRouter();
+  const { t } = useTranslation();
+
   const { isLoading, requestHandler } = useRequest();
   const [editDetails, setEditDetails] = useState({});
 
@@ -42,7 +48,7 @@ const EditMovie = () => {
       });
     } catch (error) {
       router.push("/");
-      toast.error(error?.messsage ?? "Something went wrong");
+      toast.error(error?.messsage ?? t("somethingWengWrong"));
     }
   };
 
@@ -57,7 +63,12 @@ const EditMovie = () => {
           <Spinner />
         </div>
       ) : !isLoading ? (
-        <CreateAndEdit editDetails={editDetails} />
+        <>
+          <Head>
+            <title>{t("movieEdit")}</title>
+          </Head>
+          <CreateAndEdit editDetails={editDetails} />
+        </>
       ) : null}
     </>
   );

@@ -1,0 +1,93 @@
+{
+  "language": "Idioma",
+  "myMovies": "Mis Películas",
+  "logout": "Cerrar sesión",
+  "prev": "Anterior",
+  "next": "Siguiente",
+  "edit": "Editar",
+  "cancel": "Cancelar",
+  "update": "Actualizar",
+  "submit": "Enviar",
+  "dropImage": "Suelta una imagen aquí",
+  "createNewMovie": "Crear una nueva película",
+  "addMovie": "Agregar una nueva película",
+  "title": "Título",
+  "publishingYear": "Año de publicación",
+  "hindi": "Hindi",
+  "english": "Inglés",
+  "spanish": "Español",
+  "uploadFileValidation": "Por favor sube un archivo en formato JPG, JPEG o PNG.",
+  "somethingWengWrong": "Algo salió mal, por favor inténtalo de nuevo",
+  "signInSuccess": "Inicio de sesión exitoso",
+  "createdSuccess": "Creado con éxito",
+  "updatedSuccess": "Actualizado con éxito",
+  "movieEdit": "Editar",
+  "movieListEmpty": "Tu lista de películas está vacía",
+  "serverError": "Error del servidor",
+  "logoutSuccess": "Cerraste sesión con éxito",
+
+  "backend": {
+    "moviesListed": "Películas obtenidas con éxito",
+    "movieCreated": "Creado con éxito",
+    "movieUpdate": "Actualizado con éxito",
+    "movieDelete": "Eliminado con éxito",
+    "methodNotSupported": "Método no permitido",
+    "userNotFound": "Usuario no encontrado",
+    "incorrectPassword": "Correo electrónico o contraseña inválidos",
+    "invalidMovieId": "ID de película inválido",
+    "movieNotFound": "Película no encontrada",
+    "errorOccurred": "Ocurrió un error al obtener la película",
+    "schemaValidation": {
+      "movieCreate": {
+        "titleMin": "El título debe tener al menos 1 carácter",
+        "titleMax": "El título no puede tener más de 100 caracteres",
+        "titleRequired": "El título es obligatorio",
+        "yearRequired": "El año de lanzamiento es obligatorio",
+        "yearPositiveNo": "El año de lanzamiento debe ser un número positivo",
+        "yearInteger": "El año de lanzamiento debe ser un número entero",
+        "posterRequired": "El póster es obligatorio",
+        "posterValid": "El póster debe ser una imagen (jpeg, jpg, png)"
+      },
+      "movieUpdate": {
+        "titleMin": "El título debe tener al menos 1 carácter",
+        "titleMax": "El título no puede tener más de 100 caracteres",
+        "yearMin": "El año de lanzamiento debe estar entre 1900 y el año actual",
+        "yearMax": "El año de lanzamiento no puede estar en el futuro"
+      },
+      "userLogin": {
+        "emailInvalid": "Dirección de correo electrónico inválida",
+        "emailRequired": "El correo electrónico es obligatorio",
+        "passwordRequired": "La contraseña es obligatoria",
+        "passwordMin": "La contraseña debe tener al menos 6 caracteres",
+        "passwordMax": "La contraseña no puede tener más de 50 caracteres"
+      }
+    }
+  },
+
+  "createMovie": {
+    "validation": {
+      "titleRequired": "El título es un campo obligatorio",
+      "yearRequired": "El año es un campo obligatorio",
+      "yearLength": "El año debe tener exactamente 4 dígitos",
+      "yearValid": "El año debe ser un número válido de 4 dígitos",
+      "fileRequired": "Se requiere un archivo",
+      "fileUnsupportFormat": "Formato de archivo no compatible",
+      "fileTooLarge": "Archivo demasiado grande"
+    }
+  },
+
+  "signinPage": {
+    "title": "Iniciar sesión",
+    "login": "Iniciar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "validation": {
+      "rememberMe": "Recuérdame",
+      "emailInvalid": "Formato de correo electrónico inválido",
+      "emailRequired": "El correo electrónico es un campo obligatorio",
+      "passwordRequired": "La contraseña es un campo obligatorio",
+      "passwordToShort": "La contraseña es demasiado corta - debe tener al menos 8 caracteres."
+    }
+  },
+  "common": {}
+}

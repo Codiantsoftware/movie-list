@@ -1,4 +1,6 @@
 import { ValidationError } from "yup";
+import { i18n } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import Movie from "../../../models/Movie";
 import sequelize from "../../../lib/db";
@@ -25,20 +27,26 @@ const uploadMiddleware = upload.single("poster");
 async function handleUploadMovie(req, res) {
   await sequelize.sync();
 
+  const lang = req.headers["accept-language"];
+
+  await serverSideTranslations(lang || "en", ["common"]);
+
   const { method } = req;
 
   switch (method) {
     case "GET":
       try {
-        const { page = 1, limit = 10 } = req.query;
+        const { page = 1, limit = 10, lang } = req.query;
         const offset = (page - 1) * limit;
         const movies = await Movie.findAndCountAll({
           limit: parseInt(limit),
           offset: parseInt(offset),
+          order: [["id", "DESC"]],
         });
 
         res.status(200).json({
           success: true,
+          message: i18n.t("backend.moviesListed"),
           data: movies.rows,
           pagination: {
             total: movies.count,
@@ -48,14 +56,20 @@ async function handleUploadMovie(req, res) {
         });
       } catch (error) {
         logger("Error fetching movies:", error);
-        res.status(500).json({ success: false, message: "Server error" });
+        res.status(500).json({
+          success: false,
+          message: error?.message ?? i18n.t("serverError"),
+        });
       }
       break;
 
     case "POST":
       uploadMiddleware(req, res, async (err) => {
         if (err) {
-          return res.status(400).json({ success: false, message: err.message });
+          return res.status(400).json({
+            success: false,
+            message: err?.message ?? i18n.t("serverError"),
+          });
         }
 
         try {
@@ -72,7 +86,11 @@ async function handleUploadMovie(req, res) {
             poster: file.path, // Save the file path in the database
           });
 
-          res.status(201).json({ success: true, data: movie });
+          res.status(201).json({
+            success: true,
+            message: i18n.t("backend.movieCreated"),
+            data: movie,
+          });
         } catch (error) {
           if (error instanceof ValidationError) {
             return res
@@ -80,18 +98,20 @@ async function handleUploadMovie(req, res) {
               .json({ success: false, message: error.message });
           } else {
             logger("Error creating movie:", error);
-            return res
-              .status(500)
-              .json({ success: false, message: "Server error" });
+            return res.status(500).json({
+              success: false,
+              message: error?.message ?? i18n.t("serverError"),
+            });
           }
         }
       });
       break;
 
     default:
-      res
-        .status(405)
-        .json({ success: false, message: `Method ${method} not allowed` });
+      res.status(405).json({
+        success: false,
+        message: `${method} ${i18n.t("backend.methodNotSupported")}`,
+      });
       break;
   }
 }

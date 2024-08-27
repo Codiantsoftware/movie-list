@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import Dropzone from "react-dropzone";
+import { useTranslation } from "react-i18next";
 
 import { Container, Form, Image, Spinner } from "react-bootstrap";
 import Button from "../Button";
@@ -22,6 +23,8 @@ const acceptFileExt = ["image/png", "image/jpg", "image/jpeg"];
 const CreateAndEdit = (props) => {
   const { editDetails } = props;
   const router = useRouter();
+  const { t } = useTranslation();
+
   const { requestHandler } = useRequest();
 
   /**
@@ -49,14 +52,14 @@ const CreateAndEdit = (props) => {
 
       await requestHandler(configData, (data) => {
         if (data?.success) {
-          toast.success(`${editDetails ? "Updated" : "Created"} successfully`);
+          toast.success(t(editDetails ? "updatedSuccess" : "createdSuccess"));
           router.push("/");
         } else {
           throw new Error(data?.message);
         }
       });
     } catch (error) {
-      toast.error(error.message ?? "Something went wrong");
+      toast.error(error.message ?? t("somethingWengWrong"));
     }
   };
 
@@ -67,21 +70,24 @@ const CreateAndEdit = (props) => {
       poster: editDetails?.poster ?? null,
     },
     validationSchema: Yup.object({
-      title: Yup.string().required("Title is a required field"),
+      title: Yup.string().required(t("createMovie.validation.titleRequired")),
       year: Yup.string()
-        .required("Year is a required field")
-        .length(4, "Year must be exactly 4 digits")
-        .matches(/^\d{4}$/, "Year must be a valid 4-digit number"),
+        .required(t("createMovie.validation.yearRequired"))
+        .length(4, t("createMovie.validation.yearLength"))
+        .matches(/^\d{4}$/, t("createMovie.validation.yearValid")),
       poster: Yup.mixed()
-        .required("A file is required")
-
-        .test("fileSize", "Unsupported File Format", function (value) {
-          if (!editDetails || typeof value !== "string") {
-            return value && ["image/jpeg", "image/png"].includes(value.type);
-          }
-          return true;
-        })
-        .test("fileSize", "File too large", (value) => {
+        .required(t("createMovie.validation.fileRequired"))
+        .test(
+          "fileSize",
+          t("createMovie.validation.fileUnsupportFormat"),
+          function (value) {
+            if (!editDetails || typeof value !== "string") {
+              return value && ["image/jpeg", "image/png"].includes(value.type);
+            }
+            return true;
+          },
+        )
+        .test("fileSize", t("createMovie.validation.fileTooLarge"), (value) => {
           if (!editDetails || typeof value !== "string") {
             return value && value.size <= 2 * 1024 * 1024; // 2 MB
           }
@@ -101,7 +107,7 @@ const CreateAndEdit = (props) => {
     if (acceptFileExt.includes(acceptedFiles[0]?.type)) {
       formik.setFieldValue("poster", acceptedFiles[0]);
     } else {
-      toast.error("Please upload a JPG, JPEG, PNG file format.");
+      toast.error(t("uploadFileValidation"));
     }
   };
 
@@ -111,7 +117,7 @@ const CreateAndEdit = (props) => {
         <div className="pageHeader d-flex align-items-center justify-content-between">
           <div className="d-flex align-items-center">
             <h1 className="title mb-0">
-              {editDetails ? "Edit" : "Create a new movie"}
+              {t(editDetails ? "edit" : "createNewMovie")}
             </h1>
           </div>
         </div>
@@ -121,7 +127,11 @@ const CreateAndEdit = (props) => {
               <div className="createForm_left">
                 <Dropzone
                   onDrop={handleFildDrop}
-                  accept={acceptFileExt}
+                  accept={{
+                    "image/jpg": [],
+                    "image/jpeg": [],
+                    "image/png": [],
+                  }}
                   maxFiles={1}
                 >
                   {({ getRootProps, getInputProps }) => (
@@ -131,7 +141,7 @@ const CreateAndEdit = (props) => {
                           <div {...getRootProps({ className: "dropzone" })}>
                             <input {...getInputProps()} />
                             <em className="icon-download"></em>
-                            <p>Drop an image here</p>
+                            <p>{t("dropImage")}</p>
                           </div>
                         </>
                       ) : (
@@ -147,17 +157,6 @@ const CreateAndEdit = (props) => {
                               }
                               alt="movie-img"
                             />
-                            {/* <Image
-                              src={
-                                editDetails &&
-                                typeof formik.values.poster === "string"
-                                  ? `/api/${editDetails?.poster}`
-                                  : URL.createObjectURL(formik.values.poster)
-                              }
-                              alt="movie-img"
-                              width={100}
-                              height={100}
-                            /> */}
                             <span
                               onClick={() =>
                                 formik.setFieldValue("poster", null)
@@ -183,7 +182,7 @@ const CreateAndEdit = (props) => {
                     type="text"
                     name="title"
                     id="title"
-                    placeholder="Title"
+                    placeholder={t("title")}
                     value={formik.values.title}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -196,10 +195,10 @@ const CreateAndEdit = (props) => {
                 </Form.Group>
                 <Form.Group className="form-group form-group-small">
                   <Form.Control
-                    type="text"
+                    type="number"
                     name="year"
                     id="year"
-                    placeholder="Publishing year"
+                    placeholder={t("publishingYear")}
                     value={formik.values.year}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -216,7 +215,7 @@ const CreateAndEdit = (props) => {
                     variant="outline-light"
                     onClick={() => router.push("/")}
                   >
-                    Cancel
+                    {t("cancel")}
                   </Button>
                   <Button
                     disabled={formik.isSubmitting}
@@ -227,7 +226,7 @@ const CreateAndEdit = (props) => {
                     {formik.isSubmitting ? (
                       <Spinner />
                     ) : (
-                      <span>{editDetails ? "Update" : "Submit"}</span>
+                      <span>{t(editDetails ? "update" : "submit")}</span>
                     )}
                   </Button>
                 </div>
@@ -249,7 +248,7 @@ const CreateAndEdit = (props) => {
                   {formik.isSubmitting ? (
                     <Spinner />
                   ) : (
-                    <span>{editDetails ? "Update" : "Submit"}</span>
+                    <span>{t(editDetails ? "update" : "submit")}</span>
                   )}
                 </Button>
               </div>

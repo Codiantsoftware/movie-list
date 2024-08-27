@@ -1,10 +1,17 @@
 .moviePage {
   .emptyPage {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    // min-height: 100vh;
+    // display: flex;
+    // flex-direction: column;
+    // justify-content: center;
+    // align-items: center;
+    .emptyPageContent {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
     .title {
       margin-bottom: 40px;
     }

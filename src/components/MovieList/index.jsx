@@ -5,12 +5,14 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 import {
   Button,
   Card,
   Col,
   Container,
+  Dropdown,
   Pagination,
   Row,
   Spinner,
@@ -18,6 +20,7 @@ import {
 
 import { setResetUserDetails } from "@/store/accountSlice";
 import useRequest from "@/hooks/useRequest";
+import { langOptions } from "@/utils/static";
 
 const PAGE_LIMIT = 8;
 
@@ -30,6 +33,7 @@ const PAGE_LIMIT = 8;
 const MovieList = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { i18n, t } = useTranslation();
   const [state, setState] = useState({
     isLoading: true,
     lists: [],
@@ -73,7 +77,7 @@ const MovieList = () => {
       });
     } catch (error) {
       setState({ ...state, isLoading: false });
-      toast.error(error?.messsage ?? "Something went wrong");
+      toast.error(error?.messsage ?? t("somethingWengWrong"));
     }
   };
 
@@ -93,8 +97,14 @@ const MovieList = () => {
    * @return {void} No return value, redirects to signin page
    */
   const handleLogout = () => {
+    toast.success(t("logoutSuccess"));
     dispatch(setResetUserDetails());
     router.push("/auth/signin");
+  };
+
+  const handleChangeLanguage = (lang) => {
+    i18n.changeLanguage(lang);
+    router.push(router.pathname, router.asPath, { locale: lang });
   };
 
   useEffect(() => {
@@ -105,31 +115,87 @@ const MovieList = () => {
     <div className="moviePage">
       {!state.isLoading && !state.lists?.length ? (
         <>
-          <div className="emptyPage text-center">
-            <Container>
-              <h1 className="title">Your movie list is empty</h1>
-              <Button
-                variant="primary"
-                onClick={() => router.push("/create-movie")}
-              >
-                Add a new movie
-              </Button>
-            </Container>
-          </div>
+          <main className="py-120">
+            <div className="emptyPage text-center">
+              <Container>
+                <div className="pageHeader d-flex align-items-center justify-content-between">
+                  <div className="d-flex align-items-center ms-auto">
+                    <Dropdown className="languageDropdown">
+                      <Dropdown.Toggle
+                        as="span"
+                        variant="success"
+                        id="dropdown-basic"
+                      >
+                        {t("language")}
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu align={"end"}>
+                        {langOptions.map((lang, idx) => (
+                          <Dropdown.Item
+                            key={idx}
+                            onClick={() => handleChangeLanguage(lang?.lang)}
+                          >
+                            <Link key={idx} href="/" locale={lang?.lang}>
+                              {t(lang.fullName.toLowerCase())}
+                            </Link>
+                          </Dropdown.Item>
+                        ))}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                    <span className="logoutLink ms-3" onClick={handleLogout}>
+                      <span>{t("logout")}</span>
+                      <em className="icon-logout" />
+                    </span>
+                  </div>
+                </div>
+                <div className="emptyPageContent">
+                  <h1 className="title">{t("movieListEmpty")}</h1>
+                  <Button
+                    variant="primary"
+                    onClick={() => router.push("/create-movie")}
+                  >
+                    {t("addMovie")}
+                  </Button>
+                </div>
+              </Container>
+            </div>
+          </main>
         </>
       ) : !state.isLoading && state.lists.length > 0 ? (
         <main className="py-120">
           <Container>
             <div className="pageHeader d-flex align-items-center justify-content-between">
               <div className="d-flex align-items-center">
-                <h1 className="title mb-0">My movies</h1>
+                <h1 className="title mb-0">{t("myMovies")}</h1>
                 <Link href="/create-movie">
                   <em className="addMovies icon-add-circle"></em>
                 </Link>
               </div>
-              <div>
-                <span className="logoutLink" onClick={handleLogout}>
-                  <span>Logout</span>
+              <div className="d-flex align-items-center ms-auto">
+                <Dropdown className="languageDropdown">
+                  <Dropdown.Toggle
+                    as="span"
+                    variant="success"
+                    id="dropdown-basic"
+                  >
+                    {t("language")}
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu align={"end"}>
+                    {langOptions.map((lang, idx) => (
+                      <Dropdown.Item
+                        key={idx}
+                        onClick={() => handleChangeLanguage(lang?.lang)}
+                      >
+                        <Link key={idx} href="/" locale={lang?.lang}>
+                          {t(lang.fullName.toLowerCase())}
+                        </Link>
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Menu>
+                </Dropdown>
+                <span className="logoutLink ms-3" onClick={handleLogout}>
+                  <span>{t("logout")}</span>
                   <em className="icon-logout" />
                 </span>
               </div>
@@ -173,7 +239,7 @@ const MovieList = () => {
                   className="page-item-link"
                   onClick={() => handlePagination(state.currentPage - 1)}
                 >
-                  Prev
+                  {t("prev")}
                 </Pagination.Prev>
                 {Array(state.pagination.totalPages)
                   .fill({})
@@ -192,7 +258,7 @@ const MovieList = () => {
                   className="page-item-link"
                   onClick={() => handlePagination(state.currentPage + 1)}
                 >
-                  Next
+                  {t("next")}
                 </Pagination.Next>
               </Pagination>
             </div>

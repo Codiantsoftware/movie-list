@@ -1,5 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { i18n } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import User from "../../../../models/User";
 import sequelize from "../../../../lib/db";
@@ -15,6 +17,10 @@ import logger from "@/utils/logger";
 export default async function handler(req, res) {
   await sequelize.sync();
 
+  const lang = req.headers["accept-language"];
+
+  await serverSideTranslations(lang || "en", ["common"]);
+
   const { method } = req;
 
   switch (method) {
@@ -23,7 +29,7 @@ export default async function handler(req, res) {
     default:
       return res.status(405).json({
         success: false,
-        message: `Method ${method} not allowed`,
+        message: `${method} ${i18n.t("backend.methodNotSupported")}`,
       });
   }
 }
@@ -47,7 +53,7 @@ async function handleUserLogin(req, res) {
     if (!user) {
       return res
         .status(401)
-        .json({ success: false, message: "User Not Found" });
+        .json({ success: false, message: i18n.t("backend.userNotFound") });
     }
 
     // Check if the password is correct
@@ -55,7 +61,7 @@ async function handleUserLogin(req, res) {
     if (!isMatch) {
       return res
         .status(401)
-        .json({ success: false, message: "Invalid email or password" });
+        .json({ success: false, message: i18n.t("backend.incorrectPassword") });
     }
 
     // Create JWT token
@@ -68,6 +74,7 @@ async function handleUserLogin(req, res) {
 
     return res.status(200).json({
       success: true,
+      message: i18n.t("signInSuccess"),
       token: token,
       user: {
         id: user.id,
@@ -80,14 +87,17 @@ async function handleUserLogin(req, res) {
     if (error.name === "ValidationError") {
       return res
         .status(400)
-        .json({ success: false, message: error.errors.join(", ") });
+        .json({
+          success: false,
+          message: error?.errors?.join?.(", ") ?? i18n.t("serverError"),
+        });
     }
 
     // Handle other errors
     logger("Server error:", error); // Changed from logger to console.error for consistency
     return res.status(500).json({
       success: false,
-      message: "Server error",
+      message: i18n.t("serverError"),
     });
   }
 }

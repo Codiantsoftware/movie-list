@@ -1,5 +1,7 @@
 import { useState, useCallback } from "react";
 import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 
 /**
  * A custom React hook for handling API requests.
@@ -7,9 +9,11 @@ import { useSelector } from "react-redux";
  * @return {object} An object containing error, isLoading, and requestHandler.
  */
 const useRequest = () => {
+  const { t } = useTranslation();
+  const router = useRouter();
+  const token = useSelector((state) => state?.account?.userDetails?.token);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const token = useSelector((state) => state?.account?.userDetails?.token);
 
   const requestHandler = useCallback(async (configData, applyData) => {
     setIsLoading(true);
@@ -22,14 +26,16 @@ const useRequest = () => {
           ? configData.header
           : token && {
               Authorization: `Bearer ${token}`,
+              "accept-language": router?.locale ?? "en",
             },
       });
 
+      const result = await response.json();
+
       if (!response.ok) {
-        throw new Error("Something went Wrong");
+        throw new Error(result?.message ?? t("somethingWengWrong"));
       }
 
-      const result = await response.json();
       applyData({ ...result, success: true });
     } catch (error) {
       applyData({ success: false, message: error.message });

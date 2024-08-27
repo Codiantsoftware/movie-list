@@ -1,0 +1,68 @@
+{
+  "language": "भाषा",
+  "myMovies": "मेरी फिल्में",
+  "logout": "लॉग आउट",
+  "prev": "पिछला पृष्ठ",
+  "next": "अगला पृष्ठ",
+  "edit": "मूवी संपादित करें",
+  "cancel": "रद्द करें",
+  "update": "अद्यतन करें",
+  "submit": "जमा करें",
+  "dropImage": "यहां एक छवि छोड़ें",
+  "createNewMovie": "एक नई फिल्म बनाएं",
+  "addMovie": "एक नई मूवी जोड़ें",
+  "title": "शीर्षक",
+  "publishingYear": "प्रकाशन वर्ष",
+  "yearRequired": "प्रकाशन वर्ष आवश्यक है",
+  "hindi": "हिन्दी",
+  "english": "अंग्रेज़ी",
+  "spanish": "स्पैनिश",
+  "uploadFileValidation": "कृपया JPG, JPEG, PNG फ़ाइल स्वरूप अपलोड करें।",
+  "somethingWengWrong": "कुछ गड़बड़ हुई है। कृपया दोबारा प्रयास करें।",
+  "signInSuccess": "सफलतापूर्वक साइन इन किया गया।",
+  "createdSuccess": "सफलतापूर्वक बनाया गया।",
+  "updatedSuccess": "सफलतापूर्वक अपडेट किया गया।",
+  "movieEdit": "मूवी संपादित करें",
+  "movieListEmpty": "आपकी फ़िल्म सूची खाली है",
+  "serverError": "सर्वर त्रुटि",
+  "logoutSuccess ": "सफलतापूर्वक लॉग आउट हो गया",
+
+  "backend": {
+    "moviesListed": "फ़िल्में सफलतापूर्वक प्राप्त हुईं।",
+    "movieCreated": "सफलतापूर्वक बनाया गया।",
+    "movieUpdate": "सफलतापूर्वक अपडेट किया गया।",
+    "movieDelete": "सफलतापूर्वक मिटाया गया।",
+    "methodNotSupported": "विधि अनुमत नहीं।",
+    "userNotFound": "उपयोगकर्ता नहीं मिला।",
+    "incorrectPassword": "अमान्य ईमेल या पासवर्ड।",
+    "invalidMovieId": "अमान्य मूवी आईडी।",
+    "movieNotFound": "मूवी नहीं मिला।",
+    "errorOccurred": "मूवी लाते समय एक त्रुटि उत्पन्न हुई"
+  },
+
+  "createMovie": {
+    "validation": {
+      "titleRequired": "शीर्षक आवश्यक है",
+      "yearRequired": "प्रकाशन वर्ष आवश्यक है",
+      "yearLength": "प्रकाशन वर्ष 4 अंकों का होना चाहिए",
+      "yearValid": "प्रकाशन वर्ष वैध 4-अंकीय संख्या होनी चाहिए",
+      "fileRequired": "फ़ाइल आवश्यक है",
+      "fileUnsupportFormat": "असमर्थित फ़ाइल स्वरूप",
+      "fileTooLarge": "फ़ाइल बहुत बड़ी है"
+    }
+  },
+
+  "signinPage": {
+    "title": "साइन-इन",
+    "login": "लॉग इन करें",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "validation": {
+      "rememberMe": "मुझे याद करो",
+      "emailInvalid": "ईमेल प्रारूप अमान्य है",
+      "emailRequired": "ईमेल एक आवश्यक फ़ील्ड है",
+      "passwordRequired": "पासवर्ड आवश्यक फ़ील्ड है",
+      "passwordToShort": "पासवर्ड बहुत छोटा है - न्यूनतम 8 अक्षर होना चाहिए"
+    }
+  }
+}

@@ -6,12 +6,14 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import CryptoJS from "crypto-js";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Container, Form, Spinner } from "react-bootstrap";
 import Button from "@/components/Button";
 
 import { setIsRememberMe, setUserDetails } from "@/store/accountSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { getStaticPropsWithTranslations } from "@/utils/i18n";
 
 /**
  * Handles user sign-in functionality, including form validation,
@@ -23,6 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 const SignIn = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const isRememberDetails = useSelector(
     (state) => state?.account?.isRememberMe,
@@ -54,7 +57,8 @@ const SignIn = () => {
         throw new Error(data.message);
       }
 
-      toast.success("Sign in successfully");
+      toast.success(t("signInSuccess"));
+
       dispatch(setUserDetails({ ...data?.user, token: data?.token }));
 
       // Store token based on remember me option
@@ -75,7 +79,7 @@ const SignIn = () => {
 
       router.push("/");
     } catch (error) {
-      toast.error(error.message ?? "Something went wrong");
+      toast.error(error.message ?? t("somethingWengWrong"));
     }
   };
 
@@ -87,11 +91,11 @@ const SignIn = () => {
     },
     validationSchema: Yup.object({
       email: Yup.string()
-        .email("Email format is invalid")
-        .required("Email is a required field"),
+        .email(t("signinPage.validation.emailInvalid"))
+        .required(t("signinPage.validation.emailRequired")),
       password: Yup.string()
-        .required("No password provided.")
-        .min(8, "Password is too short - should be 8 chars minimum."),
+        .required(t("signinPage.validation.passwordRequired"))
+        .min(8, t("signinPage.validation.passwordToShort")),
       isRemember: Yup.boolean(),
     }),
     onSubmit: (formValues, formProps) => handleSubmit(formValues, formProps),
@@ -119,13 +123,13 @@ const SignIn = () => {
     <div className="authMain position-relative">
       <Container>
         <div className="authMain_innerbox">
-          <h1>Sign in</h1>
+          <h1>{t("signinPage.title")}</h1>
           <form onSubmit={formik.handleSubmit}>
             <Form.Group className="form-group">
               <Form.Control
                 type="email"
                 name="email"
-                placeholder="Email"
+                placeholder={t("signinPage.email")}
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -140,7 +144,7 @@ const SignIn = () => {
               <Form.Control
                 type="password"
                 name="password"
-                placeholder="Password"
+                placeholder={t("signinPage.password")}
                 value={formik.values.password}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -161,14 +165,16 @@ const SignIn = () => {
                 onChange={formik.handleChange}
                 className="form-check-input"
               />
-              <label htmlFor="isRemember">Remember me</label>
+              <label htmlFor="isRemember">
+                {t("signinPage.validation.rememberMe")}
+              </label>
             </Form.Group>
             <Button
               className="w-100 ripple-effect-dark"
               variant="primary"
               type="submit"
             >
-              {formik.isSubmitting ? <Spinner /> : "Login"}
+              {formik.isSubmitting ? <Spinner /> : t("signinPage.login")}
             </Button>
           </form>
         </div>
@@ -176,5 +182,9 @@ const SignIn = () => {
     </div>
   );
 };
+
+export async function getStaticProps({ locale }) {
+  return getStaticPropsWithTranslations(locale);
+}
 
 export default SignIn;

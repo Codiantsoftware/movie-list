@@ -1,0 +1,93 @@
+{
+  "language": "Language",
+  "myMovies": "My Movies",
+  "logout": "Logout",
+  "prev": "Prev",
+  "next": "Next",
+  "edit": "Edit",
+  "cancel": "Cancel",
+  "update": "Update",
+  "submit": "Submit",
+  "dropImage": "Drop an image here",
+  "createNewMovie": "Create a new movie",
+  "addMovie": "Add a new movie",
+  "title": "Title",
+  "publishingYear": "Publishing year",
+  "hindi": "Hindi",
+  "english": "English",
+  "spanish": "Spanish",
+  "uploadFileValidation": "Please upload a JPG, JPEG, PNG file format.",
+  "somethingWengWrong": "Something went wrong, please try again",
+  "signInSuccess": "Sign in successfully",
+  "createdSuccess": "Created successfully",
+  "updatedSuccess": "Updated successfully",
+  "movieEdit": "Edit",
+  "movieListEmpty": "Your movie list is empty",
+  "serverError": "Server Error",
+  "logoutSuccess": "Logged out successfully",
+
+  "backend": {
+    "moviesListed": "Movies fetched successfully",
+    "movieCreated": "Created successfully",
+    "movieUpdate": "Updated successfully",
+    "movieDelete": "Deleted successfully",
+    "methodNotSupported": "method not allowed",
+    "userNotFound": "User Not Found",
+    "incorrectPassword": "Invalid email or password",
+    "invalidMovieId": "Invalid movie ID",
+    "movieNotFound": "Movie not found",
+    "errorOccurred": "An error occurred while fetching the movie",
+    "schemaValidation": {
+      "movieCreate": {
+        "titleMin": "Title must be at least 1 character long",
+        "titleMax": "Title cannot be longer than 100 characters",
+        "titleRequired": "Title is required",
+        "yearRequired": "Release year is required",
+        "yearPositiveNo": "Release year must be a positive number",
+        "yearInteger": "Release year must be an integer",
+        "posterRequired": "Poster is required",
+        "posterValid": "Poster must be an image (jpeg, jpg, png)"
+      },
+      "movieUpdate": {
+        "titleMin": "Title must be at least 1 character long",
+        "titleMax": "Title cannot be longer than 100 characters",
+        "yearMin": "Release year must be between 1900 and the current year",
+        "yearMax": "Release year cannot be in the future"
+      },
+      "userLogin": {
+        "emailInvalid": "Invalid email address",
+        "emailRequired": "Email is required",
+        "passwordRequired": "Password is required",
+        "passwordMin": "Password must be at least 6 characters long",
+        "passwordMax": "Password cannot be longer than 50 characters"
+      }
+    }
+  },
+
+  "createMovie": {
+    "validation": {
+      "titleRequired": "Title is a required field",
+      "yearRequired": "Year is a required field",
+      "yearLength": "Year must be exactly 4 digits",
+      "yearValid": "Year must be a valid 4-digit number",
+      "fileRequired": "A file is required",
+      "fileUnsupportFormat": "Unsupported File Format",
+      "fileTooLarge": "File too large"
+    }
+  },
+
+  "signinPage": {
+    "title": "Sign in",
+    "login": "Login",
+    "email": "Email",
+    "password": "Password",
+    "validation": {
+      "rememberMe": "Remember me",
+      "emailInvalid": "Email format is invalid",
+      "emailRequired": "Email is a required field",
+      "passwordRequired": "Password is a required field",
+      "passwordToShort": "Password is too short - should be 8 chars minimum.Password is too short - should be 8 chars minimum."
+    }
+  },
+  "common": {}
+}
